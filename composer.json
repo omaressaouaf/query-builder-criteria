@@ -1,0 +1,55 @@
+{
+    "name": "omaressaouaf/query-builder-criteria",
+    "version": "1.0.0",
+    "description": "Spatie Query Builder Extension that offers a declarative and reusable way to query your models",
+    "keywords": [
+        "omaressaouaf",
+        "query builder",
+        "spatie query builder",
+        "filtering",
+        "sorting",
+        "filter criteria"
+    ],
+    "type": "library",
+    "homepage": "https://github.com/omaressaouaf/query-builder-criteria",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Omar Essaouaf",
+            "email": "souafomar@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Omaressaouaf\\QueryBuilderCriteria\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Omaressaouaf\\QueryBuilderCriteria\\Database\\Factories\\": "database/factories/",
+            "Omaressaouaf\\QueryBuilderCriteria\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-f": "vendor/bin/phpunit --filter"
+    },
+    "require": {
+        "php": "^8.2|^8.3|^8.4",
+        "illuminate/contracts": "^10.0||^11.0||^12.0",
+        "spatie/laravel-query-builder": "^6.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0",
+        "phpunit/phpunit": "^10.5"
+    },
+    "extra" : {
+        "laravel" : {
+            "providers" : [
+                "Omaressaouaf\\QueryBuilderCriteria\\QueryBuilderCriteriaServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
