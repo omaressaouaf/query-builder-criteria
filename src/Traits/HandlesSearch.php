@@ -9,9 +9,7 @@ use Spatie\QueryBuilder\QueryBuilderRequest;
 
 trait HandlesSearch
 {
-    private const RELATION_FULL_TEXT_PREFIX = 'full_text_';
-
-    public function handleSearch(Builder $query, mixed $search, bool $splitIntoTerms = false): Builder
+    private function handleSearch(Builder $query, mixed $search, bool $splitIntoTerms = false): Builder
     {
         $search = $this->normalizeSearch($search);
 
@@ -25,7 +23,6 @@ trait HandlesSearch
             $query->{$key === 0 ? 'where' : 'orWhere'}(
                 function (Builder $query) use ($term) {
                     $query = $this->searchThroughColumns($query, $term);
-
                     $query = $this->searchThroughRelations($query, $term);
                 }
             );
@@ -34,68 +31,6 @@ trait HandlesSearch
         $query = $this->sortByFullTextRelevance($query, $search);
 
         return $query;
-    }
-
-    public function searchThroughColumns(Builder $query, string $term): Builder
-    {
-        if (! $term) {
-            return $query;
-        }
-
-        foreach ($this->getSearchableColumns() as $column) {
-            $this->searchableIsFullText($column)
-                ? $query->orWhereFullText($column, $term)
-                : $query->orWhere($column, 'like', '%' . $term . '%');
-        }
-
-        return $query;
-    }
-
-    public function searchThroughRelations(Builder $query, string $term): Builder
-    {
-        if (! $term) {
-            return $query;
-        }
-
-        $query->orWhere(function ($query) use ($term) {
-            foreach ($this->getSearchableRelations() as $relation => $columns) {
-                $query
-                    ->orWhereHas(
-                        $relation,
-                        function ($query) use ($relation, $columns, $term) {
-                            foreach ($columns as $key => $column) {
-                                $chainingWhere = $key === 0 ? 'where' : 'orWhere';
-
-                                $this->searchableIsFullText($column, $relation)
-                                    ? $query->{$chainingWhere . 'FullText'}($column, $term)
-                                    : $query->{$chainingWhere}($column, 'like', '%' . $term . '%');
-                            }
-                        }
-                    );
-            }
-        });
-
-        return $query;
-    }
-
-    public function sortByFullTextRelevance(Builder $query, string $search): Builder
-    {
-        if (! isset($this->fullTextSearchable)) {
-            return $query;
-        }
-
-        $fullTextSearchable = Arr::wrap($this->fullTextSearchable);
-
-        if (! $search || ! count($fullTextSearchable)) {
-            return $query;
-        }
-
-        $fullTextSearchable = implode(',', $fullTextSearchable);
-
-        return $query
-            ->when(! $query->getQuery()->columns, fn(Builder $query) => $query->select('*'))
-            ->selectRaw("MATCH($fullTextSearchable) AGAINST(?) AS relevance", [$search])
-            ->orderBy('relevance', 'desc');
     }
 
     private function normalizeSearch(array|string $search): string
@@ -115,66 +50,110 @@ trait HandlesSearch
         }
     }
 
-    public function getSearchableColumns(): array
+    private function searchThroughColumns(Builder $query, string $term): Builder
     {
-        $searches = isset($this->searches) ? $this->searches : [];
-        $fullTextSearches = isset($this->fullTextSearches) ? $this->fullTextSearches : [];
+        if (! $term) {
+            return $query;
+        }
 
-        $columnSearches = Arr::where(
-            $searches,
+        foreach ($this->getColumnsSearches() as $column) {
+            $this->searchIsFullText($column)
+                ? $query->orWhereFullText($column, $term)
+                : $query->orWhere($column, 'like', '%' . $term . '%');
+        }
+
+        return $query;
+    }
+
+    private function searchThroughRelations(Builder $query, string $term): Builder
+    {
+        if (! $term) {
+            return $query;
+        }
+
+        $query->orWhere(function ($query) use ($term) {
+            foreach ($this->getRelationsSearches() as $relation => $columns) {
+                $query
+                    ->orWhereHas(
+                        $relation,
+                        function ($query) use ($relation, $columns, $term) {
+                            foreach ($columns as $key => $column) {
+                                $chainingWhere = $key === 0 ? 'where' : 'orWhere';
+
+                                $this->searchIsFullText($column, $relation)
+                                    ? $query->{$chainingWhere . 'FullText'}($column, $term)
+                                    : $query->{$chainingWhere}($column, 'like', '%' . $term . '%');
+                            }
+                        }
+                    );
+            }
+        });
+
+        return $query;
+    }
+
+    private function sortByFullTextRelevance(Builder $query, string $search): Builder
+    {
+        if (! $search || ! count($this->fullTextSearches)) {
+            return $query;
+        }
+
+        $fullTextSearches = implode(',', $this->fullTextSearches);
+
+        return $query
+            ->when(! $query->getQuery()->columns, fn(Builder $query) => $query->select('*'))
+            ->selectRaw("MATCH($fullTextSearches) AGAINST(?) AS relevance", [$search])
+            ->orderBy('relevance', 'desc');
+    }
+
+    private function getColumnsSearches(): array
+    {
+        $columnsSearches = Arr::where(
+            $this->searches,
             fn(string $search) => !str($search)->contains('.')
         );
         $columnsFullTextSearches = Arr::where(
-            $fullTextSearches,
+            $this->fullTextSearches,
             fn(string $fullTextSearch) => !str($fullTextSearch)->contains('.')
         );
 
-        return array_merge($columnSearches, $columnsFullTextSearches);
+        return array_merge($columnsSearches, $columnsFullTextSearches);
     }
 
-    public function getSearchableRelations(): array
+    private function getRelationsSearches(): array
     {
-        $searches = isset($this->searches) ? $this->searches : [];
-        $fullTextSearches = isset($this->fullTextSearches) ? $this->fullTextSearches : [];
-
         $relationsSearches = Arr::where(
-            $searches,
+            $this->searches,
             fn(string $search) => str($search)->contains('.')
         );
         $relationsFullTextSearches = Arr::where(
-            $fullTextSearches,
+            $this->fullTextSearches,
             fn(string $fullTextSearch) => str($fullTextSearch)->contains('.')
         );
 
-        $formatRelations = fn(array $rs) => collect($rs)
-            ->mapWithKeys(fn($value) => [Str::beforeLast($value, '.') => Str::afterLast($value, '.')])
-            ->toArray();
-
-        $formatRelations = function (array $rs) {
+        $formatRelationsSearches = function (array $relationsSearches) {
             $formatted = [];
 
-            foreach ($rs as $relation) {
-                $key = Str::beforeLast($relation, '.');
-                $formatted[$key][] = Str::afterLast($relation, '.');
+            foreach ($relationsSearches as $relationSearches) {
+                $key = Str::beforeLast($relationSearches, '.');
+                $formatted[$key][] = Str::afterLast($relationSearches, '.');
             }
 
             return $formatted;
         };
 
         return array_merge(
-            $formatRelations($relationsSearches),
-            $formatRelations($relationsFullTextSearches)
+            $formatRelationsSearches($relationsSearches),
+            $formatRelationsSearches($relationsFullTextSearches)
         );
     }
 
-    public function searchableIsFullText(string $column, ?string $relation = null): bool
+    private function searchIsFullText(string $column, ?string $relation = null): bool
     {
-        $fullTextSearches = isset($this->fullTextSearches) ? $this->fullTextSearches : [];
-
         if ($relation) {
-            return in_array($relation . '.' . $column, Arr::wrap($fullTextSearches));
+            return in_array($relation . '.' . $column, $this->fullTextSearches);
         }
 
-        return in_array($column, $fullTextSearches);
+        return in_array($column, $this->fullTextSearches);
     }
 }
