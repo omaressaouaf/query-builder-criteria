@@ -10,17 +10,17 @@ trait TransformsIncludes
     public function getAllIncludes(): array
     {
         return array_merge(
-            $this->transformRelationshipIncludes(),
+            $this->transformIncludes(),
             $this->transformCountIncludes(),
             $this->transformExistsIncludes(),
             $this->advancedIncludes()
         );
     }
 
-    private function transformRelationshipIncludes(): array
+    private function transformIncludes(): array
     {
         return Arr::map(
-            $this->relationshipIncludes,
+            $this->includes,
             function (string $value, mixed $key) {
                 if (is_numeric($key)) {
                     return AllowedInclude::relationship($value);

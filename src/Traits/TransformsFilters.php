@@ -10,7 +10,7 @@ trait TransformsFilters
     public function getAllFilters(): array
     {
         $filters = array_merge(
-            $this->transformPartialFilters(),
+            $this->transformFilters(),
             $this->transformExactFilters(),
             $this->transformBelongsToFilters(),
             $this->transformScopeFilters(),
@@ -35,10 +35,10 @@ trait TransformsFilters
         return $filters;
     }
 
-    private function transformPartialFilters(): array
+    private function transformFilters(): array
     {
         return Arr::map(
-            $this->partialFilters,
+            $this->filters,
             function (string $value, mixed $key) {
                 if (is_numeric($key)) {
                     return AllowedFilter::partial($value);

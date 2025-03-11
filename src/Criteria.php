@@ -14,7 +14,7 @@ class Criteria
     use TransformsIncludes;
     use TransformsFields;
 
-    protected array $partialFilters = [];
+    protected array $filters = [];
 
     protected array $exactFilters = [];
 
@@ -28,7 +28,7 @@ class Criteria
 
     protected array $sorts = [];
 
-    protected array $relationshipIncludes = [];
+    protected array $includes = [];
 
     protected array $countIncludes = [];
 
