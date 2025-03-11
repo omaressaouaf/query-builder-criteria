@@ -38,6 +38,10 @@ class Criteria
 
     protected array $fields = [];
 
+    protected array $searches = [];
+
+    protected array $fullTextSearches = [];
+
     protected function advancedFilters(): array
     {
         return [];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Omaressaouaf\LaravelIdGenerator;
+namespace Omaressaouaf\QueryBuilderCriteria;
 
 use Illuminate\Support\ServiceProvider;
 

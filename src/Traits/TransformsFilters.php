@@ -2,19 +2,28 @@
 
 namespace Omaressaouaf\QueryBuilderCriteria\Traits;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Spatie\QueryBuilder\AllowedFilter;
 
 trait TransformsFilters
 {
-    public function getAllFilters(): array
+    use HandlesSearch;
+
+    public function getAllFilters(bool $splitIntoTerms = false): array
     {
         $filters = array_merge(
             $this->transformFilters(),
             $this->transformExactFilters(),
             $this->transformBelongsToFilters(),
             $this->transformScopeFilters(),
-            $this->advancedFilters()
+            $this->advancedFilters(),
+            [
+                AllowedFilter::callback(
+                    'search_query',
+                    fn(Builder $query, $search) => $this->handleSearch($query, $search, $splitIntoTerms)
+                ),
+            ]
         );
 
         if (!is_null($this->trashedFilter)) {
