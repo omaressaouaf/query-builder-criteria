@@ -2,8 +2,6 @@
 
 namespace Omaressaouaf\QueryBuilderCriteria\Tests\Unit;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Omaressaouaf\QueryBuilderCriteria\QueryableByCriteria;
 use Omaressaouaf\QueryBuilderCriteria\Tests\Criteria\Criteria;
 use Omaressaouaf\QueryBuilderCriteria\Tests\TestCase;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -12,8 +10,6 @@ use Spatie\QueryBuilder\AllowedSort;
 
 class CriteriaTest extends TestCase
 {
-    use RefreshDatabase, QueryableByCriteria;
-
     public function test_it_transforms_all_properties(): void
     {
         $criteria = new Criteria;

@@ -2,19 +2,18 @@
 
 namespace Omaressaouaf\QueryBuilderCriteria\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 use Omaressaouaf\QueryBuilderCriteria\QueryBuilderCriteriaServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
+    use RefreshDatabase;
+
     public function setUp(): void
     {
         parent::setUp();
-
-        Factory::guessFactoryNamesUsing(
-            fn(string $modelName) => 'Omaressaouaf\\QueryBuilderCriteria\\Database\\Factories\\' . class_basename($modelName) . 'Factory'
-        );
     }
 
     protected function getPackageProviders($app)
@@ -28,13 +27,19 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         config()->set('database.default', 'testing');
         config()->set('database.connections.testing', [
-            'driver'   => 'sqlite',
-            'database' => ':memory:',
-            'prefix'   => '',
+            'driver'   => 'mysql',
+            'host' => 'localhost',
+            'database' => 'query_builder_criteria_testing',
+            'username' => 'root',
+            'password' => '',
         ]);
 
-        // foreach (File::allFiles(__DIR__ . '/../database/migrations') as $migration) {
-        //     (include $migration->getRealPath())->up();
-        // }
+        Artisan::call('migrate:rollback');
+
+        foreach (File::allFiles(__DIR__.'/Migrations') as $migration) {
+            $migration = include $migration->getRealPath();
+            $migration->down();
+            $migration->up();
+        }
     }
 }
