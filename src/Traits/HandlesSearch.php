@@ -9,7 +9,7 @@ use Spatie\QueryBuilder\QueryBuilderRequest;
 
 trait HandlesSearch
 {
-    private function handleSearch(Builder $query, mixed $search, bool $splitIntoTerms = false): Builder
+    private function handleSearch(Builder $query, mixed $search): Builder
     {
         $search = $this->normalizeSearch($search);
 
@@ -17,7 +17,11 @@ trait HandlesSearch
             return $query;
         }
 
-        $searchTerms = $splitIntoTerms ? $this->getSearchTerms($search) : [$search];
+        $splitSearchIntoTerms = is_bool($this->splitSearchIntoTerms)
+            ? $this->splitSearchIntoTerms
+            : config('query-builder-criteria.split_search_into_terms') ?? false;
+
+        $searchTerms = $splitSearchIntoTerms ? $this->getSearchTerms($search) : [$search];
 
         foreach ($searchTerms as $key => $term) {
             $query->{$key === 0 ? 'where' : 'orWhere'}(
@@ -131,12 +135,12 @@ trait HandlesSearch
             fn(string $fullTextSearch) => str($fullTextSearch)->contains('.')
         );
 
-        $formatRelationsSearches = function (array $relationsSearches) {
+        $formatRelationsSearches = function (array $rs) {
             $formatted = [];
 
-            foreach ($relationsSearches as $relationSearches) {
-                $key = Str::beforeLast($relationSearches, '.');
-                $formatted[$key][] = Str::afterLast($relationSearches, '.');
+            foreach ($rs as $rsI) {
+                $key = Str::beforeLast($rsI, '.');
+                $formatted[$key][] = Str::afterLast($rsI, '.');
             }
 
             return $formatted;

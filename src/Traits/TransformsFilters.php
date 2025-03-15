@@ -10,7 +10,7 @@ trait TransformsFilters
 {
     use HandlesSearch;
 
-    public function getAllFilters(bool $splitIntoTerms = false): array
+    public function getAllFilters(): array
     {
         $filters = array_merge(
             $this->transformFilters(),
@@ -20,8 +20,8 @@ trait TransformsFilters
             $this->advancedFilters(),
             [
                 AllowedFilter::callback(
-                    'search_query',
-                    fn(Builder $query, $search) => $this->handleSearch($query, $search, $splitIntoTerms)
+                    config('query-builder-criteria.search_query_parameter') ?? 'search_query',
+                    fn(Builder $query, mixed $search) => $this->handleSearch($query, $search)
                 ),
             ]
         );

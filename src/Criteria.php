@@ -42,7 +42,14 @@ class Criteria
 
     protected array $fullTextSearches = [];
 
+    protected ?bool $splitSearchIntoTerms = null;
+
     protected function advancedFilters(): array
+    {
+        return [];
+    }
+
+    protected function advancedDefaultSorts(): array
     {
         return [];
     }

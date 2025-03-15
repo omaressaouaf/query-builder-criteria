@@ -4,11 +4,13 @@ namespace Omaressaouaf\QueryBuilderCriteria\Traits;
 
 trait TransformsFields
 {
-    public function getAllFields(): array
+    public function getDefaultFields(): array
     {
-        return array_merge(
-            $this->defaultFields,
-            $this->fields
-        );
+        return $this->defaultFields;
+    }
+
+    public function getFields(): array
+    {
+        return $this->fields;
     }
 }

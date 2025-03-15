@@ -7,27 +7,35 @@ use Spatie\QueryBuilder\AllowedSort;
 
 trait TransformsSorts
 {
-    public function getAllSorts(): array
+    public function getDefaultSorts(): array
     {
         return array_merge(
             $this->transformDefaultSorts(),
+            $this->advancedDefaultSorts()
+        );
+    }
+
+    public function getSorts(): array
+    {
+        return array_merge(
             $this->transformSorts(),
             $this->advancedSorts()
         );
     }
 
-    private function transformDefaultSorts(): array
+    public function transformDefaultSorts(): array
     {
-        return Arr::map(
-            $this->defaultSorts,
-            function (string $value, mixed $key) {
-                if (is_numeric($key)) {
-                    return AllowedSort::field($value);
-                }
+        return
+            Arr::map(
+                $this->defaultSorts,
+                function (string $value, mixed $key) {
+                    if (is_numeric($key)) {
+                        return AllowedSort::field($value);
+                    }
 
-                return AllowedSort::field($key, $value);
-            }
-        );
+                    return AllowedSort::field($key, $value);
+                }
+            );
     }
 
     private function transformSorts(): array

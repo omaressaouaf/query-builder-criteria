@@ -13,49 +13,61 @@ trait TransformsIncludes
             $this->transformIncludes(),
             $this->transformCountIncludes(),
             $this->transformExistsIncludes(),
-            $this->advancedIncludes()
+            collect($this->advancedIncludes())->flatten()->toArray()
         );
     }
 
     private function transformIncludes(): array
     {
-        return Arr::map(
-            $this->includes,
-            function (string $value, mixed $key) {
-                if (is_numeric($key)) {
-                    return AllowedInclude::relationship($value);
-                }
+        return collect(
+            Arr::map(
+                $this->includes,
+                function (string $value, mixed $key) {
+                    if (is_numeric($key)) {
+                        return AllowedInclude::relationship($value);
+                    }
 
-                return AllowedInclude::relationship($key, $value);
-            }
-        );
+                    return AllowedInclude::relationship($key, $value);
+                }
+            )
+        )
+            ->flatten()
+            ->toArray();
     }
 
     private function transformCountIncludes(): array
     {
-        return Arr::map(
-            $this->countIncludes,
-            function (string $value, mixed $key) {
-                if (is_numeric($key)) {
-                    return AllowedInclude::count($value);
-                }
+        return collect(
+            Arr::map(
+                $this->countIncludes,
+                function (string $value, mixed $key) {
+                    if (is_numeric($key)) {
+                        return AllowedInclude::count($value);
+                    }
 
-                return AllowedInclude::count($key, $value);
-            }
-        );
+                    return AllowedInclude::count($key, $value);
+                }
+            )
+        )
+            ->flatten()
+            ->toArray();
     }
 
     private function transformExistsIncludes(): array
     {
-        return Arr::map(
-            $this->existsIncludes,
-            function (string $value, mixed $key) {
-                if (is_numeric($key)) {
-                    return AllowedInclude::exists($value);
-                }
+        return collect(
+            Arr::map(
+                $this->existsIncludes,
+                function (string $value, mixed $key) {
+                    if (is_numeric($key)) {
+                        return AllowedInclude::exists($value);
+                    }
 
-                return AllowedInclude::exists($key, $value);
-            }
-        );
+                    return AllowedInclude::exists($key, $value);
+                }
+            )
+        )
+            ->flatten()
+            ->toArray();
     }
 }
