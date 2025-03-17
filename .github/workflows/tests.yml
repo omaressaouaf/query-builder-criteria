@@ -18,6 +18,7 @@ jobs:
         env:
           MYSQL_DATABASE: query_builder_criteria_testing
           MYSQL_ROOT_PASSWORD: ''
+          MYSQL_ALLOW_EMPTY_PASSWORD: true
         ports:
           - 3306
         options: >-
