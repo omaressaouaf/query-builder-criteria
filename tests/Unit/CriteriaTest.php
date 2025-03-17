@@ -25,9 +25,9 @@ class CriteriaTest extends TestCase
         collect($criteria->getSorts())
             ->each(fn($i) => $this->assertInstanceOf(AllowedSort::class, $i));
 
-        $this->assertCount(11, $criteria->getAllIncludes());
+        $this->assertCount(7, $criteria->getAllIncludes());
         collect($criteria->getAllIncludes())
-            ->each(fn($i) => $this->assertInstanceOf(AllowedInclude::class, $i));
+            ->each(fn($i) => $i->each(fn($include) => $this->assertInstanceOf(AllowedInclude::class, $include)));
 
         $this->assertCount(2, $criteria->getFields());
         collect($criteria->getFields())->each(fn($i) => is_string($i));

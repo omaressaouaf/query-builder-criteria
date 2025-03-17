@@ -3,9 +3,8 @@
 namespace Omaressaouaf\QueryBuilderCriteria\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\File;
 use Omaressaouaf\QueryBuilderCriteria\QueryBuilderCriteriaServiceProvider;
+use Spatie\QueryBuilder\QueryBuilderServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
 {
@@ -14,11 +13,14 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
     }
 
     protected function getPackageProviders($app)
     {
         return [
+            QueryBuilderServiceProvider::class,
             QueryBuilderCriteriaServiceProvider::class,
         ];
     }
@@ -33,13 +35,5 @@ class TestCase extends \Orchestra\Testbench\TestCase
             'username' => 'root',
             'password' => '',
         ]);
-
-        Artisan::call('migrate:rollback');
-
-        foreach (File::allFiles(__DIR__.'/Migrations') as $migration) {
-            $migration = include $migration->getRealPath();
-            $migration->down();
-            $migration->up();
-        }
     }
 }

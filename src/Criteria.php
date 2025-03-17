@@ -24,7 +24,7 @@ class Criteria
 
     protected string|bool|array|null $trashedFilter = null;
 
-    protected array $defaultSorts = [];
+    protected array|string $defaultSorts = [];
 
     protected array $sorts = [];
 

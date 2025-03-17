@@ -13,7 +13,7 @@ trait QueryableByCriteria
         $criteria = collect(
             array_merge(
                 Arr::wrap($criteria),
-                $this->defaultQueryBuilderCriteria()
+                Arr::wrap($this->defaultQueryBuilderCriteria())
             )
         )
             ->map(function ($criteria) {
@@ -62,21 +62,22 @@ trait QueryableByCriteria
             $query = $query->defaultSorts($defaultSorts);
         }
 
-        if (count($includes)) {
-            $query = $query->allowedIncludes($includes);
+        $requestFields = request()->get(config('query-builder.parameters.fields'));
+        if (count($fields)) {
+            $query = $query->allowedFields($fields);
+        }
+        if(!$requestFields && count($defaultFields)) {
+            $query = $query->addSelect($defaultFields);
         }
 
-        $requestFields = request()->get(config('query-builder.parameters.fields'));
-        if ($requestFields && count($fields)) {
-            $query = $query->allowedFields($fields);
-        } elseif (!$requestFields && count($defaultFields)) {
-            $query = $query->addSelect($defaultFields);
+        if (count($includes)) {
+            $query = $query->allowedIncludes(Arr::map($includes, fn($include) => collect($include)));
         }
 
         return $query;
     }
 
-    protected function defaultQueryBuilderCriteria(): array
+    protected function defaultQueryBuilderCriteria(): array|string
     {
         return [];
     }

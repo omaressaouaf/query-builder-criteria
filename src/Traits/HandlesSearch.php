@@ -102,11 +102,14 @@ trait HandlesSearch
             return $query;
         }
 
-        $fullTextSearches = implode(',', $this->fullTextSearches);
+        $columns = implode(
+            ',',
+            Arr::where($this->getColumnsSearches(), fn(string $column) => $this->searchIsFullText($column))
+        );
 
         return $query
             ->when(! $query->getQuery()->columns, fn(Builder $query) => $query->select('*'))
-            ->selectRaw("MATCH($fullTextSearches) AGAINST(?) AS relevance", [$search])
+            ->selectRaw("MATCH($columns) AGAINST(?) AS relevance", [$search])
             ->orderBy('relevance', 'desc');
     }
 

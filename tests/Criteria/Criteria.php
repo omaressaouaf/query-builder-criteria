@@ -19,7 +19,7 @@ class Criteria extends BaseCriteria
 
     protected string|bool|array|null $trashedFilter = true;
 
-    protected array $defaultSorts = ['default_sort_1'];
+    protected array|string $defaultSorts = ['default_sort_1'];
 
     protected array $sorts = ['sort_1', '-sort_2'];
 

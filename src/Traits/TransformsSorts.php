@@ -27,7 +27,7 @@ trait TransformsSorts
     {
         return
             Arr::map(
-                $this->defaultSorts,
+                Arr::wrap($this->defaultSorts),
                 function (string $value, mixed $key) {
                     if (is_numeric($key)) {
                         return AllowedSort::field($value);

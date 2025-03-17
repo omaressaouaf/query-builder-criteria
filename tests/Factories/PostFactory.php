@@ -14,7 +14,9 @@ class PostFactory extends Factory
         return [
             'slug' => $this->faker->unique()->slug(3),
             'title' => $this->faker->sentence(),
-            'body' => $this->faker->paragraph(4)
+            'body' => $this->faker->paragraph(4),
+            'published_at' => $this->faker->dateTime(),
+            'user_id' => UserFactory::new(),
         ];
     }
 }
