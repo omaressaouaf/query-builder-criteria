@@ -10,11 +10,11 @@ class TestCase extends \Orchestra\Testbench\TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__ . '/Migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Migrations');
     }
 
     protected function getPackageProviders($app)
@@ -29,7 +29,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
     {
         config()->set('database.default', 'testing');
         config()->set('database.connections.testing', [
-            'driver'   => env('DB_CONNECTION', 'mysql'),
+            'driver' => env('DB_CONNECTION', 'mysql'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'query_builder_criteria_testing'),

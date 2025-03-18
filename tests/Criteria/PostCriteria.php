@@ -12,7 +12,7 @@ class PostCriteria extends BaseCriteria
 
     protected array $belongsToFilters = ['user'];
 
-    protected array $scopeFilters = ["published_before"];
+    protected array $scopeFilters = ['published_before'];
 
     protected string|bool|array|null $trashedFilter = true;
 

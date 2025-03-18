@@ -9,10 +9,10 @@ use Omaressaouaf\QueryBuilderCriteria\Traits\TransformsSorts;
 
 class Criteria
 {
-    use TransformsFilters;
-    use TransformsSorts;
-    use TransformsIncludes;
     use TransformsFields;
+    use TransformsFilters;
+    use TransformsIncludes;
+    use TransformsSorts;
 
     protected array $filters = [];
 

@@ -15,24 +15,24 @@ class QueryableByCriteriaTest extends TestCase
 
         $posts = $this->getPosts([
             'filter' => [
-                'title' => $dummyPosts[0]->title
-            ]
+                'title' => $dummyPosts[0]->title,
+            ],
         ]);
         $this->assertCount(1, $posts);
         $this->assertEquals($dummyPosts[0]->title, $posts->first()->title);
 
         $posts = $this->getPosts([
             'filter' => [
-                'id' => $dummyPosts[3]->id
-            ]
+                'id' => $dummyPosts[3]->id,
+            ],
         ]);
         $this->assertCount(1, $posts);
         $this->assertEquals($dummyPosts[3]->id, $posts->first()->id);
 
         $posts = $this->getPosts([
             'filter' => [
-                'user' => $dummyPosts[2]->user->id
-            ]
+                'user' => $dummyPosts[2]->user->id,
+            ],
         ]);
         $this->assertCount(1, $posts);
         $this->assertEquals($dummyPosts[2]->user_id, $posts->first()->user_id);
@@ -40,8 +40,8 @@ class QueryableByCriteriaTest extends TestCase
         $dummyPost = Post::factory()->create(['published_at' => now()->subCentury()]);
         $posts = $this->getPosts([
             'filter' => [
-                'published_before' => $dummyPost->published_at->toDateTimeString()
-            ]
+                'published_before' => $dummyPost->published_at->toDateTimeString(),
+            ],
         ]);
         $this->assertCount(1, $posts);
         $this->assertEquals($dummyPost->published_at, $posts->first()->published_at);
@@ -49,14 +49,14 @@ class QueryableByCriteriaTest extends TestCase
         $dummyPost->delete();
         $posts = $this->getPosts([
             'filter' => [
-                'trashed' => 'with'
-            ]
+                'trashed' => 'with',
+            ],
         ]);
         $this->assertCount(6, $posts);
         $posts = $this->getPosts([
             'filter' => [
-                'trashed' => 'only'
-            ]
+                'trashed' => 'only',
+            ],
         ]);
         $this->assertCount(1, $posts);
     }
@@ -67,7 +67,9 @@ class QueryableByCriteriaTest extends TestCase
 
         $posts = $this->getPosts()->toArray();
         foreach ($posts as $i => $post) {
-            if (!isset($posts[$i - 1])) continue;
+            if (! isset($posts[$i - 1])) {
+                continue;
+            }
             $this->assertTrue($posts[$i]['published_at'] < $posts[$i - 1]['published_at']);
         }
 
@@ -75,7 +77,9 @@ class QueryableByCriteriaTest extends TestCase
             'sort' => 'published_at',
         ])->toArray();
         foreach ($posts as $i => $post) {
-            if (!isset($posts[$i - 1])) continue;
+            if (! isset($posts[$i - 1])) {
+                continue;
+            }
             $this->assertTrue($posts[$i]['published_at'] > $posts[$i - 1]['published_at']);
         }
     }
@@ -92,8 +96,8 @@ class QueryableByCriteriaTest extends TestCase
         $posts = $this->getPosts([
             'include' => 'user',
             'fields' => [
-                'posts' => 'id,user_id'
-            ]
+                'posts' => 'id,user_id',
+            ],
         ])->toArray();
         foreach ($posts as $post) {
             $this->assertIsArray($post['user']);
@@ -111,11 +115,11 @@ class QueryableByCriteriaTest extends TestCase
 
         $posts = $this->getPosts([
             'fields' => [
-                'posts' => 'id,user_id'
-            ]
+                'posts' => 'id,user_id',
+            ],
         ])->toArray();
         foreach ($posts as $post) {
-            $this->assertTrue(isset($post['id']) && isset($post['user_id']) && !isset($post['slug']));
+            $this->assertTrue(isset($post['id']) && isset($post['user_id']) && ! isset($post['slug']));
         }
     }
 
@@ -126,8 +130,8 @@ class QueryableByCriteriaTest extends TestCase
         Post::factory()->create(['title' => 'find me']);
         $posts = $this->getPosts([
             'filter' => [
-                'search_query' => 'find me'
-            ]
+                'search_query' => 'find me',
+            ],
         ]);
         $this->assertCount(1, $posts);
         $this->assertEquals('find me', $posts->first()->title);
@@ -135,8 +139,8 @@ class QueryableByCriteriaTest extends TestCase
         Post::factory()->create(['body' => 'find me']);
         $posts = $this->getPosts([
             'filter' => [
-                'search_query' => 'find me'
-            ]
+                'search_query' => 'find me',
+            ],
         ]);
         $this->assertCount(2, $posts);
         $this->assertEquals('find me', $posts->first()->body);
@@ -144,8 +148,8 @@ class QueryableByCriteriaTest extends TestCase
         Post::factory()->for(UserFactory::new(['bio' => 'by user bio this time']))->create();
         $posts = $this->getPosts([
             'filter' => [
-                'search_query' => 'by user bio'
-            ]
+                'search_query' => 'by user bio',
+            ],
         ]);
         $this->assertCount(1, $posts);
         $this->assertEquals('by user bio this time', $posts->first()->user->bio);
@@ -153,7 +157,7 @@ class QueryableByCriteriaTest extends TestCase
 
     private function getPosts(array $params = []): Collection
     {
-        $this->get('/?' . http_build_query($params));
+        $this->get('/?'.http_build_query($params));
 
         return Post::query()->queryByCriteria()->get();
     }

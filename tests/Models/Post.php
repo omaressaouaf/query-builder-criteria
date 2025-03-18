@@ -13,12 +13,12 @@ use Omaressaouaf\QueryBuilderCriteria\Tests\Factories\PostFactory;
 
 class Post extends Model
 {
-    use HasFactory, SoftDeletes, QueryableByCriteria;
+    use HasFactory, QueryableByCriteria, SoftDeletes;
 
     protected $guarded = [];
 
     protected $casts = [
-        'published_before' => 'dateTime'
+        'published_before' => 'dateTime',
     ];
 
     protected static function newFactory()

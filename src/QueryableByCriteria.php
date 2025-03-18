@@ -19,16 +19,16 @@ trait QueryableByCriteria
             ->map(function ($criteria) {
                 $criteria = new $criteria;
 
-                if (!$criteria instanceof Criteria) {
+                if (! $criteria instanceof Criteria) {
                     throw new InvalidArgumentException(
-                        'criteria needs to be instance of ' . Criteria::class
+                        'criteria needs to be instance of '.Criteria::class
                     );
                 }
 
                 return $criteria;
             });
 
-        $getPropery = fn($cb) => $criteria->flatMap($cb)->values()->toArray();
+        $getPropery = fn ($cb) => $criteria->flatMap($cb)->values()->toArray();
         [
             $filters,
             $sorts,
@@ -37,12 +37,12 @@ trait QueryableByCriteria
             $fields,
             $defaultFields,
         ] = [
-            $getPropery(fn(Criteria $c) => $c->getAllFilters()),
-            $getPropery(fn(Criteria $c) => $c->getSorts()),
-            $getPropery(fn(Criteria $c) => $c->getDefaultSorts()),
-            $getPropery(fn(Criteria $c) => $c->getAllIncludes()),
-            $getPropery(fn(Criteria $c) => $c->getFields()),
-            $getPropery(fn(Criteria $c) => $c->getDefaultFields()),
+            $getPropery(fn (Criteria $c) => $c->getAllFilters()),
+            $getPropery(fn (Criteria $c) => $c->getSorts()),
+            $getPropery(fn (Criteria $c) => $c->getDefaultSorts()),
+            $getPropery(fn (Criteria $c) => $c->getAllIncludes()),
+            $getPropery(fn (Criteria $c) => $c->getFields()),
+            $getPropery(fn (Criteria $c) => $c->getDefaultFields()),
         ];
 
         $query = QueryBuilder::for($query);
@@ -66,12 +66,12 @@ trait QueryableByCriteria
         if (count($fields)) {
             $query = $query->allowedFields($fields);
         }
-        if(!$requestFields && count($defaultFields)) {
+        if (! $requestFields && count($defaultFields)) {
             $query = $query->addSelect($defaultFields);
         }
 
         if (count($includes)) {
-            $query = $query->allowedIncludes(Arr::map($includes, fn($include) => collect($include)));
+            $query = $query->allowedIncludes(Arr::map($includes, fn ($include) => collect($include)));
         }
 
         return $query;

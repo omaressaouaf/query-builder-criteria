@@ -63,7 +63,7 @@ trait HandlesSearch
         foreach ($this->getColumnsSearches() as $column) {
             $this->searchIsFullText($column)
                 ? $query->orWhereFullText($column, $term)
-                : $query->orWhere($column, 'like', '%' . $term . '%');
+                : $query->orWhere($column, 'like', '%'.$term.'%');
         }
 
         return $query;
@@ -85,8 +85,8 @@ trait HandlesSearch
                                 $chainingWhere = $key === 0 ? 'where' : 'orWhere';
 
                                 $this->searchIsFullText($column, $relation)
-                                    ? $query->{$chainingWhere . 'FullText'}($column, $term)
-                                    : $query->{$chainingWhere}($column, 'like', '%' . $term . '%');
+                                    ? $query->{$chainingWhere.'FullText'}($column, $term)
+                                    : $query->{$chainingWhere}($column, 'like', '%'.$term.'%');
                             }
                         }
                     );
@@ -104,11 +104,11 @@ trait HandlesSearch
 
         $columns = implode(
             ',',
-            Arr::where($this->getColumnsSearches(), fn(string $column) => $this->searchIsFullText($column))
+            Arr::where($this->getColumnsSearches(), fn (string $column) => $this->searchIsFullText($column))
         );
 
         return $query
-            ->when(! $query->getQuery()->columns, fn(Builder $query) => $query->select('*'))
+            ->when(! $query->getQuery()->columns, fn (Builder $query) => $query->select('*'))
             ->selectRaw("MATCH($columns) AGAINST(?) AS relevance", [$search])
             ->orderBy('relevance', 'desc');
     }
@@ -117,11 +117,11 @@ trait HandlesSearch
     {
         $columnsSearches = Arr::where(
             $this->searches,
-            fn(string $search) => !str($search)->contains('.')
+            fn (string $search) => ! str($search)->contains('.')
         );
         $columnsFullTextSearches = Arr::where(
             $this->fullTextSearches,
-            fn(string $fullTextSearch) => !str($fullTextSearch)->contains('.')
+            fn (string $fullTextSearch) => ! str($fullTextSearch)->contains('.')
         );
 
         return array_merge($columnsSearches, $columnsFullTextSearches);
@@ -131,11 +131,11 @@ trait HandlesSearch
     {
         $relationsSearches = Arr::where(
             $this->searches,
-            fn(string $search) => str($search)->contains('.')
+            fn (string $search) => str($search)->contains('.')
         );
         $relationsFullTextSearches = Arr::where(
             $this->fullTextSearches,
-            fn(string $fullTextSearch) => str($fullTextSearch)->contains('.')
+            fn (string $fullTextSearch) => str($fullTextSearch)->contains('.')
         );
 
         $formatRelationsSearches = function (array $rs) {
@@ -158,7 +158,7 @@ trait HandlesSearch
     private function searchIsFullText(string $column, ?string $relation = null): bool
     {
         if ($relation) {
-            return in_array($relation . '.' . $column, $this->fullTextSearches);
+            return in_array($relation.'.'.$column, $this->fullTextSearches);
         }
 
         return in_array($column, $this->fullTextSearches);

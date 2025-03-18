@@ -15,7 +15,7 @@ class Criteria extends BaseCriteria
 
     protected array $belongsToFilters = ['bg_filter_1', 'bg_filter_2'];
 
-    protected array $scopeFilters = ["sc_filter_1", 'sc_filter_2'];
+    protected array $scopeFilters = ['sc_filter_1', 'sc_filter_2'];
 
     protected string|bool|array|null $trashedFilter = true;
 
@@ -42,21 +42,21 @@ class Criteria extends BaseCriteria
     protected function advancedFilters(): array
     {
         return [
-            AllowedFilter::callback('cb_filter_1', fn() => '')
+            AllowedFilter::callback('cb_filter_1', fn () => ''),
         ];
     }
 
     protected function advancedSorts(): array
     {
         return [
-            AllowedSort::callback('cb_sort_1', fn() => '')
+            AllowedSort::callback('cb_sort_1', fn () => ''),
         ];
     }
 
     protected function advancedIncludes(): array
     {
         return [
-            AllowedInclude::callback('cb_include', fn() => '')
+            AllowedInclude::callback('cb_include', fn () => ''),
         ];
     }
 }

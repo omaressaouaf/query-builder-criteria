@@ -21,12 +21,12 @@ trait TransformsFilters
             [
                 AllowedFilter::callback(
                     config('query-builder-criteria.search_query_parameter') ?? 'search_query',
-                    fn(Builder $query, mixed $search) => $this->handleSearch($query, $search)
+                    fn (Builder $query, mixed $search) => $this->handleSearch($query, $search)
                 ),
             ]
         );
 
-        if (!is_null($this->trashedFilter)) {
+        if (! is_null($this->trashedFilter)) {
             $name = match (true) {
                 is_bool($this->trashedFilter) => 'trashed',
                 is_string($this->trashedFilter) => $this->trashedFilter,
