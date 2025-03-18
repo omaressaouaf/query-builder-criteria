@@ -17,15 +17,10 @@ jobs:
         image: mysql:5.7
         env:
           MYSQL_DATABASE: query_builder_criteria_testing
-          MYSQL_ROOT_PASSWORD: ''
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
+          MYSQL_ROOT_PASSWORD: 'password'
         ports:
-          - 3306
-        options: >-
-          --health-cmd="mysqladmin ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     strategy:
       fail-fast: true
@@ -50,4 +45,11 @@ jobs:
         run:  composer install --no-interaction --prefer-dist --no-scripts
 
       - name: Execute tests
+        env:
+          DB_CONNECTION: mysql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_DATABASE: query_builder_criteria_testing
+          DB_USER: root
+          DB_PASSWORD: "password"
         run: ./vendor/bin/phpunit
