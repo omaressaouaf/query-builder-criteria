@@ -394,6 +394,14 @@ return Post::query()->queryByCriteria(CustomCriteria::class, AnotherCriteria::cl
 
 This package is based on [Spatie's Laravel Query Builder](https://spatie.be/docs/laravel-query-builder/v6/introduction).
 
+## Testing
+
+Run unit tests:
+
+```sh
+composer test
+```
+
 ## License
 
 This package is open-source and licensed under the [MIT License](https://github.com/omaressaouaf/query-builder-criteria/blob/master/LICENSE).
