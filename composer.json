@@ -4,11 +4,16 @@
     "description": "Define reusable query criteria for filtering, sorting, field selection, and includes in Laravel Eloquent models",
     "keywords": [
         "omaressaouaf",
-        "query builder",
-        "spatie query builder",
+        "php",
+        "laravel",
+        "query-builder-criteria",
+        "query-builder",
+        "spatie-query-builder",
         "filtering",
         "sorting",
-        "filter criteria"
+        "search",
+        "datatables",
+        "filter-criteria"
     ],
     "type": "library",
     "homepage": "https://github.com/omaressaouaf/query-builder-criteria",
