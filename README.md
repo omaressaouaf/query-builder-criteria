@@ -107,7 +107,7 @@ return [
 
 ---
 
-## Get Started {#get-started}
+## Get Started
 
 This package allows you to define query criteria for your models, enabling filtering, sorting, field selection, and more.
 
@@ -174,9 +174,9 @@ GET /posts?filter[title]=Hello&include=user&sort=-published_at&fields[posts]=id,
 
 ---
 
-## Criteria configuration {#criteria-configuration}
+## Criteria configuration
 
-### Filters {#filters}
+### Filters
 
 #### URL Query Example:
 
@@ -204,7 +204,7 @@ protected string|bool|array|null $trashedFilter = true;
 - **scopeFilters**: Uses model scopes like `published_before`.
 - **trashedFilter**: Enables soft-deleted filter. (Possible values : `with`, `only`)
 
-### Sorting {#sorting}
+### Sorting
 
 #### URL Query Example:
 
@@ -223,7 +223,7 @@ protected array $sorts = ['published_at', 'created_at'];
 - **defaultSorts**: Defaults to sorting by `created_at` in descending order.
 - **sorts**: Allows sorting by `published_at` and `created_at`.
 
-### Includes {#includes}
+### Includes
 
 #### URL Query Example:
 
@@ -245,7 +245,7 @@ protected array $existsIncludes = ['comments'];
 - **countIncludes**: Enables including only count of related records (`comments_count`).
 - **existsIncludes**: Enables including only whether related models exist (`has_comments`).
 
-### Field Selection {#field-selection}
+### Field Selection
 
 #### URL Query Example:
 
@@ -264,7 +264,7 @@ protected array $fields = ['id', 'slug', 'title', 'body', 'published_at', 'user_
 - **defaultFields**: Default fields returned in queries when nothing specified in query param.
 - **fields**: Lists all fields that can be selected.
 
-### Search {#search}
+### Search
 
 #### URL Query Example:
 
@@ -286,7 +286,7 @@ protected ?bool $splitSearchIntoTerms = false;
 - **fullTextSearches**: Full-text search columns `body` and `user.bio`.
 - **splitSearchIntoTerms**: Enable or Disable term splitting in searches.
 
-### Aliases {#aliases}
+### Aliases
 
 You can define an alias for a filter to keep your database structure hidden and make URLs more readable. For example, if your users table has a `user_passport_full_name` column, exposing it directly in the API isn't ideal. Instead, you can assign a more user-friendly alias:
 
@@ -306,7 +306,7 @@ protected array $filters = [
 
 This pattern is applicable for all filters, sorts and includes
 
-## Advanced Features {#advanced-features}
+## Advanced Features
 
 ### Advanced Filters, Sorting, and Includes
 
@@ -352,7 +352,7 @@ Refer to the [Spatie Query Builder Documentation](https://spatie.be/docs/laravel
 
 ---
 
-## Applying Criteria to a Model {#applying-criteria-to-a-model}
+## Applying Criteria to a Model
 
 Use the `QueryableByCriteria` trait in your model:
 
@@ -374,13 +374,13 @@ class Post extends Model
 }
 ```
 
-## Querying Data {#querying-data}
+## Querying Data
 
 ```php
 return Post::query()->queryByCriteria()->get();
 ```
 
-## Passing Criteria to Scope {#passing-criteria-to-scope}
+## Passing Criteria to Scope
 
 You can also pass a criteria class directly to the `queryByCriteria` scope. This allows you to merge additional criteria with the default criteria for flexibility and reusability:
 
@@ -390,10 +390,10 @@ return Post::query()->queryByCriteria(CustomCriteria::class, AnotherCriteria::cl
 
 ---
 
-## Credits {#credits}
+## Credits
 
 This package is based on [Spatie's Laravel Query Builder](https://spatie.be/docs/laravel-query-builder/v6/introduction).
 
-## License {#license}
+## License
 
 This package is open-source and licensed under the [MIT License](https://github.com/omaressaouaf/query-builder-criteria/blob/master/LICENSE).
