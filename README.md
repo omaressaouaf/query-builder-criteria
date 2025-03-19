@@ -60,7 +60,7 @@ $posts = Post::query()->queryByCriteria(PostCriteria::class)->get();
 - [Credits](#credits)
 - [License](#license)
 
-## Installation {#installation}
+## Installation
 
 Install via Composer:
 
