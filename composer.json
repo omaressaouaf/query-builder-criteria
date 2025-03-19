@@ -1,7 +1,7 @@
 {
     "name": "omaressaouaf/query-builder-criteria",
     "version": "1.0.0",
-    "description": "Spatie Query Builder Extension that offers a declarative and reusable way to query your models",
+    "description": "Define reusable query criteria for filtering, sorting, field selection, and includes in Laravel Eloquent models",
     "keywords": [
         "omaressaouaf",
         "query builder",

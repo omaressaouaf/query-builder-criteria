@@ -12,10 +12,10 @@
 
 With this package, you can:
 
-✅ Define query logic in a **clean, structured** manner
-✅ Apply **filters, sorts, includes, and field selections** effortlessly
-✅ Support **search** and **full-text search** and **custom query aliases**
-✅ **Merge multiple criteria dynamically** for flexible querying
+- ✅ Define query logic in a **clean, structured** manner
+- ✅ Apply **filters, sorts, includes, and field selections** effortlessly
+- ✅ Support **search** and **full-text search** and **custom query aliases**
+- ✅ **Merge multiple criteria dynamically** for flexible querying
 
 Built on top of Spatie’s Query Builder, this package **removes repetitive query logic**, keeping your controllers and models **clean and maintainable**. 🚀
 
