@@ -8,7 +8,7 @@ return [
     'search_query_parameter' => 'search_query',
 
     /**
-     * Split the search query into an array of terms (Full Text Search)
+     * Split the search query into an array of terms to compare to
      * This is applied for all criteria unless overridden inside the criteria class
      */
     'split_search_into_terms' => false,
