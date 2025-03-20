@@ -73,7 +73,7 @@ composer require omaressaouaf/query-builder-criteria
 After installation, you can publish the package configuration file using:
 
 ```bash
-php artisan vendor:publish --provider="Omaressaouaf\QueryBuilderCriteria\QueryBuilderCriteriaServiceProvider" --tag=query-builder-criteria-config
+php artisan vendor:publish --provider="Omaressaouaf\QueryBuilderCriteria\QueryBuilderCriteriaServiceProvider"
 ```
 
 This will create a configuration file in `config/query-builder-criteria.php`, allowing you to customize the default behavior.
