@@ -1,4 +1,3 @@
-
 # Query Builder Criteria
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/omaressaouaf/query-builder-criteria.svg)](https://packagist.org/packages/omaressaouaf/query-builder-criteria)
